@@ -1,0 +1,105 @@
+.navigation {
+  height: 100%;
+  margin-left: 0.15rem;
+}
+
+.navigation__list,
+.navigation__submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation__list {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 100%;
+}
+
+.navigation__item {
+  position: relative;
+}
+
+.navigation__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.1rem;
+  padding: 0 0.75rem;
+  border-radius: 0.55rem;
+  border: 0;
+  background: none;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 560;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.navigation__link--button {
+  font-family: inherit;
+}
+
+.navigation__link:hover,
+.navigation__item:focus-within > .navigation__link {
+  background: var(--interactive-bg);
+  color: var(--text-primary);
+}
+
+.navigation__item--has-children > .navigation__link::after {
+  content: '';
+  margin-left: 0.4rem;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.navigation__submenu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  min-width: 13rem;
+  padding: 0.35rem;
+  border-radius: 0.7rem;
+  border: 1px solid var(--border-color);
+  background: var(--surface-elevated);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.38);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+  z-index: 60;
+}
+
+.navigation__item:hover > .navigation__submenu,
+.navigation__item:focus-within > .navigation__submenu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.navigation__submenu .navigation__item {
+  width: 100%;
+}
+
+.navigation__submenu .navigation__link {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.navigation__submenu .navigation__submenu {
+  top: 0;
+  left: calc(100% + 0.3rem);
+}
+
+@media (max-width: 1040px) {
+  .navigation {
+    display: none;
+  }
+}

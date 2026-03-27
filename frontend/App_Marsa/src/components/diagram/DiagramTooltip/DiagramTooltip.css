@@ -1,0 +1,52 @@
+.diagram-tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.55rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+  font-size: 0.77rem;
+  font-weight: 560;
+  color: #f8fafc;
+  background: rgba(var(--marker-rgb, 15, 23, 42), 0.95);
+  border: 1px solid rgba(var(--marker-rgb, 15, 23, 42), 0.35);
+  border-radius: 0.5rem;
+  padding: 0.34rem 0.52rem;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.3);
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 5;
+}
+
+.diagram-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0.42rem;
+  height: 0.42rem;
+  transform: translateX(-50%) rotate(45deg);
+  background: rgba(var(--marker-rgb, 15, 23, 42), 0.95);
+  border-right: 1px solid rgba(var(--marker-rgb, 15, 23, 42), 0.35);
+  border-bottom: 1px solid rgba(var(--marker-rgb, 15, 23, 42), 0.35);
+}
+
+.diagram-tooltip--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.diagram-tooltip--arrow::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 2px;
+  height: 0.7rem;
+  background: rgba(148, 163, 184, 0.7);
+  transform: translateX(-50%);
+}
+
+.diagram-tooltip--arrow::after {
+  top: calc(100% + 0.7rem);
+}

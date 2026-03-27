@@ -1,0 +1,371 @@
+.interactive-diagram {
+  width: 100%;
+  max-width: 1520px;
+  margin: 0 auto;
+}
+
+.interactive-diagram__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.interactive-diagram__picker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.interactive-diagram__picker-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}
+
+.interactive-diagram__title {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.7vw, 1.85rem);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.interactive-diagram__subtitle {
+  margin: 0.45rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.interactive-diagram__workspace {
+  width: 100%;
+}
+
+.interactive-diagram__calibrate-btn {
+  border: 1px solid var(--border-color);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border-radius: 0.6rem;
+  padding: 0.45rem 0.75rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.interactive-diagram__calibrate-btn:hover {
+  background: var(--interactive-bg);
+}
+
+.interactive-diagram__calibrate-btn--active {
+  border-color: rgba(34, 197, 94, 0.8);
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.interactive-diagram__calibrate-panel {
+  border: 1px dashed var(--border-color);
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.8rem;
+  margin: -0.35rem 0 0.8rem;
+  background: color-mix(in srgb, var(--surface-elevated) 70%, transparent);
+}
+
+.interactive-diagram__calibrate-title,
+.interactive-diagram__calibrate-value {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.interactive-diagram__calibrate-value {
+  margin-top: 0.2rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.interactive-diagram__canvas {
+  position: relative;
+  width: 100%;
+  min-height: clamp(340px, 58vh, 820px);
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  box-shadow: none;
+  cursor: default;
+  touch-action: none;
+}
+
+.interactive-diagram__canvas--zoomed {
+  cursor: grab;
+}
+
+.interactive-diagram__canvas--panning {
+  cursor: grabbing;
+}
+
+.interactive-diagram__image {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+  user-select: none;
+  pointer-events: none;
+  animation: diagram-image-enter 360ms ease-out;
+}
+
+body.dark .interactive-diagram__image {
+  mix-blend-mode: normal;
+  opacity: 1;
+  filter: invert(1) contrast(1.05) brightness(1.02);
+}
+
+.interactive-diagram__transform-layer {
+  position: relative;
+  width: min(94%, 1380px);
+  transform-origin: center center;
+  transition: transform 130ms ease-out;
+}
+
+.interactive-diagram__stage {
+  position: relative;
+  width: 74%;
+  margin: 0 auto;
+}
+
+.interactive-diagram--compact .interactive-diagram__transform-layer {
+  width: min(80%, 1040px);
+}
+
+.interactive-diagram--compact .interactive-diagram__stage {
+  width: 52%;
+}
+
+.interactive-diagram--small .interactive-diagram__transform-layer {
+  width: min(74%, 980px);
+}
+
+.interactive-diagram--small .interactive-diagram__stage {
+  width: 46%;
+}
+
+.interactive-diagram__transform-layer--panning {
+  transition: none;
+}
+
+.interactive-diagram__markers-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.interactive-diagram__calibrate-cross {
+  position: absolute;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 999px;
+  border: 2px solid #ef4444;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.75);
+}
+
+.interactive-diagram__calibrate-cross::before,
+.interactive-diagram__calibrate-cross::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: #ef4444;
+  transform: translate(-50%, -50%);
+}
+
+.interactive-diagram__calibrate-cross::before {
+  width: 1px;
+  height: 1.2rem;
+}
+
+.interactive-diagram__calibrate-cross::after {
+  width: 1.2rem;
+  height: 1px;
+}
+
+.interactive-diagram__popup {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 1rem));
+  min-width: 210px;
+  max-width: 300px;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(2, 8, 23, 0.18);
+  padding: 0.65rem 0.75rem;
+  z-index: 60;
+  animation: diagram-popup-in 160ms ease-out;
+}
+
+.interactive-diagram__popup--below {
+  transform: translate(-50%, 1rem);
+  animation: diagram-popup-in-below 160ms ease-out;
+}
+
+.interactive-diagram__popup::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 0.65rem;
+  height: 0.65rem;
+  background: #ffffff;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.interactive-diagram__popup--below::after {
+  top: auto;
+  bottom: 100%;
+  transform: translateX(-50%) rotate(225deg);
+}
+
+.interactive-diagram__popup-section {
+  margin-top: 0.55rem;
+}
+
+.interactive-diagram__popup-section:first-child {
+  margin-top: 0;
+}
+
+.interactive-diagram__popup-section-title {
+  margin: 0;
+  font-size: 0.69rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.interactive-diagram__popup-list {
+  list-style: none;
+  margin: 0.3rem 0 0;
+  padding: 0;
+}
+
+.interactive-diagram__popup-value {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.interactive-diagram__popup-skeleton {
+  display: inline-block;
+  margin-top: 0.25rem;
+  width: 78px;
+  height: 0.8rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f8fafc 50%, #e2e8f0 75%);
+  background-size: 160% 100%;
+  animation: popup-skeleton-shimmer 1.2s linear infinite;
+}
+
+.interactive-diagram__popup-error {
+  margin: 0.65rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: #b91c1c;
+}
+
+.interactive-diagram__popup-retry {
+  border: 0;
+  background: transparent;
+  color: #0f172a;
+  text-decoration: underline;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.interactive-diagram__popup-retry:hover {
+  color: #1d4ed8;
+}
+
+@keyframes diagram-popup-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 0.5rem));
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 1rem));
+  }
+}
+
+@keyframes diagram-popup-in-below {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 1rem);
+  }
+}
+
+@keyframes diagram-image-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.965) translateY(14px);
+    filter: blur(1.5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes popup-skeleton-shimmer {
+  from {
+    background-position: 160% 0;
+  }
+
+  to {
+    background-position: -160% 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .interactive-diagram__canvas {
+    min-height: 360px;
+  }
+
+  .interactive-diagram__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .interactive-diagram__stage {
+    width: 86%;
+  }
+
+  .interactive-diagram--compact .interactive-diagram__stage {
+    width: 72%;
+  }
+
+  .interactive-diagram--small .interactive-diagram__stage {
+    width: 66%;
+  }
+}

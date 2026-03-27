@@ -1,0 +1,63 @@
+.diagram-marker {
+  position: absolute;
+  left: var(--marker-x);
+  top: var(--marker-y);
+  width: var(--marker-size, 1rem);
+  height: var(--marker-size, 1rem);
+  transform: translate(-50%, -50%);
+  border: 0;
+  border-radius: 999px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  display: grid;
+  place-items: center;
+}
+
+.diagram-marker__pulse {
+  position: absolute;
+  width: var(--marker-size, 1rem);
+  height: var(--marker-size, 1rem);
+  border-radius: 999px;
+  background: rgba(var(--marker-rgb, 34, 197, 94), 0.3);
+  border: 1px solid rgba(var(--marker-rgb, 34, 197, 94), 0.7);
+  box-shadow: 0 0 12px rgba(var(--marker-rgb, 34, 197, 94), 0.26), inset 0 0 0 1px rgba(15, 23, 42, 0.35);
+}
+
+.diagram-marker__dot {
+  position: relative;
+  width: calc(var(--marker-size, 1rem) * 0.5);
+  height: calc(var(--marker-size, 1rem) * 0.5);
+  border-radius: 999px;
+  background: rgba(var(--marker-rgb, 34, 197, 94), 0.14);
+  box-shadow: 0 0 0 2px rgba(var(--marker-rgb, 34, 197, 94), 0.85);
+}
+
+.diagram-marker:hover .diagram-marker__pulse,
+.diagram-marker:focus-visible .diagram-marker__pulse,
+.diagram-marker--active .diagram-marker__pulse {
+  transform: scale(1.2);
+  background: rgba(var(--marker-rgb, 34, 197, 94), 0.42);
+  box-shadow: 0 0 16px rgba(var(--marker-rgb, 34, 197, 94), 0.55), 0 0 0 4px rgba(var(--marker-rgb, 34, 197, 94), 0.24);
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.diagram-marker:hover .diagram-tooltip,
+.diagram-marker:focus-visible .diagram-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.diagram-marker:hover,
+.diagram-marker:focus-visible,
+.diagram-marker--active {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.diagram-marker:focus-visible {
+  outline: none;
+}
+
+.diagram-marker:focus-visible .diagram-marker__dot {
+  box-shadow: 0 0 0 2px rgba(var(--marker-rgb, 34, 197, 94), 0.72), 0 0 0 5px rgba(var(--marker-rgb, 34, 197, 94), 0.28);
+}

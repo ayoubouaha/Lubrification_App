@@ -1,0 +1,153 @@
+/* Sequential Navigation Buttons Styling */
+
+.sequential-nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.sequential-nav-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sequential-nav-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sequential-nav-button:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+.sequential-nav-button:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.sequential-nav-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+}
+
+.sequential-nav-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #ccc 0%, #999 100%);
+}
+
+.sequential-nav-button__icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 3;
+  flex-shrink: 0;
+}
+
+.sequential-nav-button__text {
+  display: inline;
+}
+
+.sequential-nav-button--previous {
+  justify-self: flex-start;
+}
+
+.sequential-nav-button--next {
+  justify-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sequential-nav-buttons {
+    padding: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sequential-nav-button {
+    padding: 0.625rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .sequential-nav-button__icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sequential-nav-buttons {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .sequential-nav-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .sequential-nav-button__text {
+    display: none;
+  }
+
+  .sequential-nav-button__icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Dark mode support */
+body.dark .sequential-nav-button:disabled {
+  background: linear-gradient(135deg, #444 0%, #222 100%);
+}
+
+/* Accessibility: High contrast mode */
+@media (prefers-contrast: more) {
+  .sequential-nav-button {
+    border-color: currentColor;
+    border-width: 3px;
+  }
+
+  .sequential-nav-button:disabled {
+    opacity: 1;
+    color: #999;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sequential-nav-button {
+    transition: none;
+  }
+
+  .sequential-nav-button:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .sequential-nav-button:active:not(:disabled) {
+    transform: none;
+  }
+}

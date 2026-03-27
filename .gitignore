@@ -1,0 +1,14 @@
+# Env files
+.env
+*.env
+Backend/.env
+frontend/App_Marsa/.env
+
+# Build outputs
+Backend/target
+frontend/App_Marsa/dist
+
+# Common
+target/
+node_modules/
+.DS_Store

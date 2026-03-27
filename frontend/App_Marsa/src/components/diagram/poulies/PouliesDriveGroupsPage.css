@@ -1,0 +1,23 @@
+.poulies-drive-groups {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.poulies-drive-groups__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.poulies-drive-groups__title {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.7vw, 1.85rem);
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.poulies-drive-groups__single {
+  max-width: 1200px;
+  margin: 0 auto;
+}

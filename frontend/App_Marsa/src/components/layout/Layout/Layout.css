@@ -1,0 +1,18 @@
+.layout-root {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 10% 8%, var(--hero-a), transparent 28%),
+    radial-gradient(circle at 92% 96%, var(--hero-b), transparent 32%),
+    var(--page-bg);
+}
+
+.layout-content {
+  padding-top: var(--header-height);
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.layout-main {
+  padding: clamp(1.1rem, 2.3vw, 2rem);
+}

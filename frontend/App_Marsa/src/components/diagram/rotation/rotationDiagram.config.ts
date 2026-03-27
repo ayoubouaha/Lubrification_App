@@ -1,0 +1,55 @@
+import { type DiagramPoint } from '../types';
+
+export const ROTATION_DIAGRAM_POINTS: DiagramPoint[] = [
+  {
+    id: 'rotation-point-1',
+    name: "Groupe d'entrainement 01",
+    markerLabel: "Groupe d'entrainement 01",
+    alwaysShowLabel: false,
+    markerLabelVariant: 'arrow',
+    markerColor: '59, 130, 246',
+    shortDescription: 'Point de rotation 1',
+    details: 'Ajuster le texte et les coordonnees selon le besoin.',
+    tagPrimary: '',
+    frequency: '',
+    plannedAmount: '',
+    xPercent: 79.12,
+    yPercent: 25.28,
+  },
+  {
+    id: 'rotation-point-2',
+    name: "Groupe d'entrainement 01",
+    markerLabel: "Groupe d'entrainement 01",
+    alwaysShowLabel: false,
+    markerLabelVariant: 'arrow',
+    markerColor: '59, 130, 246',
+    shortDescription: 'Point de rotation 2',
+    details: 'Ajuster le texte et les coordonnees selon le besoin.',
+    tagPrimary: '',
+    frequency: '',
+    plannedAmount: '',
+    xPercent: 81.25,
+    yPercent: 74.93,
+  },
+  {
+    id: 'rotation-point-3',
+    name: 'Couronne',
+    markerLabel: 'Couronne',
+    alwaysShowLabel: false,
+    markerLabelVariant: 'arrow',
+    shortDescription: 'Point de rotation 3',
+    details: 'Ajuster le texte et les coordonnees selon le besoin.',
+    tagPrimary: '',
+    frequency: '',
+    plannedAmount: '',
+    xPercent: 6.23,
+    yPercent: 35.9,
+  },
+];
+
+export const ROTATION_DIAGRAM_CONFIG = {
+  title: 'SYSTÈME DE ROTATION',
+  subtitle: '',
+  imageAlt: 'Schema du systeme de rotation',
+  points: ROTATION_DIAGRAM_POINTS,
+};

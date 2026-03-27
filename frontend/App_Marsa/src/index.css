@@ -1,0 +1,88 @@
+:root {
+  --header-height: 64px;
+  --footer-height: 52px;
+  --sidebar-width: 260px;
+  --page-bg: #070d16;
+  --text-primary: #d9e2ef;
+  --text-secondary: #93a3b8;
+  --border-color: #1f2b3b;
+  --header-bg: #060c15;
+  --header-fg: #f8fbff;
+  --surface-1: #0f1723;
+  --surface-2: #0a121d;
+  --surface-elevated: #0e1624;
+  --interactive-bg: #111a29;
+  --interactive-bg-strong: #182336;
+  --overlay-bg: rgba(2, 8, 20, 0.45);
+  --hero-a: rgba(17, 131, 136, 0.14);
+  --hero-b: rgba(37, 99, 235, 0.12);
+  --canvas-top: rgba(23, 37, 58, 0.62);
+  --canvas-bottom: rgba(10, 18, 29, 0.84);
+  --canvas-stripe: rgba(148, 163, 184, 0.06);
+  font-family: Manrope, 'Segoe UI', Tahoma, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.dark {
+  color-scheme: dark;
+  --page-bg: #070d16;
+  --text-primary: #d9e2ef;
+  --text-secondary: #93a3b8;
+  --border-color: #1f2b3b;
+  --header-bg: #060c15;
+  --header-fg: #f8fbff;
+  --surface-1: #0f1723;
+  --surface-2: #0a121d;
+  --surface-elevated: #0e1624;
+  --interactive-bg: #111a29;
+  --interactive-bg-strong: #182336;
+  --overlay-bg: rgba(2, 8, 20, 0.45);
+  --hero-a: rgba(17, 131, 136, 0.14);
+  --hero-b: rgba(37, 99, 235, 0.12);
+  --canvas-top: rgba(23, 37, 58, 0.62);
+  --canvas-bottom: rgba(10, 18, 29, 0.84);
+  --canvas-stripe: rgba(148, 163, 184, 0.06);
+}
+
+body.light {
+  color-scheme: light;
+  --page-bg: #f4f7fb;
+  --text-primary: #182232;
+  --text-secondary: #5f6f85;
+  --border-color: #d1dbe8;
+  --header-bg: #ffffff;
+  --header-fg: #1f2937;
+  --surface-1: #ffffff;
+  --surface-2: #f6f9fd;
+  --surface-elevated: #ffffff;
+  --interactive-bg: #eef3fa;
+  --interactive-bg-strong: #e7eef8;
+  --overlay-bg: rgba(15, 23, 42, 0.2);
+  --hero-a: rgba(37, 99, 235, 0.09);
+  --hero-b: rgba(16, 185, 129, 0.07);
+  --canvas-top: rgba(239, 246, 255, 0.9);
+  --canvas-bottom: rgba(226, 237, 251, 0.8);
+  --canvas-stripe: rgba(94, 110, 132, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--page-bg);
+  color: var(--text-primary);
+}

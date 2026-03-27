@@ -1,0 +1,81 @@
+.selection-card {
+  width: 100%;
+  min-height: 240px;
+  border: 1px solid color-mix(in srgb, var(--border-color), transparent 20%);
+  border-radius: 1.1rem;
+  background: linear-gradient(150deg, var(--surface-elevated), var(--surface-2));
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: center;
+  padding: 1.2rem 1.2rem 1.4rem;
+  box-shadow: 0 14px 30px rgba(2, 8, 23, 0.18);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.selection-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 34px rgba(15, 23, 42, 0.28);
+  border-color: color-mix(in srgb, var(--interactive-bg-strong), transparent 25%);
+  background: linear-gradient(150deg, var(--surface-elevated), var(--interactive-bg));
+}
+
+.selection-card:focus-visible {
+  outline: 2px solid var(--interactive-bg-strong);
+  outline-offset: 2px;
+}
+
+.selection-card__title {
+  font-size: clamp(0.95rem, 2vw, 1.08rem);
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0.015rem;
+}
+
+.selection-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--interactive-bg-strong), transparent 15%);
+  border: 1px solid color-mix(in srgb, var(--border-color), transparent 20%);
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.selection-card:hover .selection-card__cta {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--interactive-bg-strong), transparent 5%);
+}
+
+.selection-card__media {
+  flex: 1;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 0.9rem;
+  padding: 0.75rem;
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.1), rgba(148, 163, 184, 0.04));
+  overflow: hidden;
+}
+
+.selection-card__image {
+  width: min(62%, 170px);
+  max-height: 140px;
+  object-fit: contain;
+  transition: transform 200ms ease;
+  transform-origin: center;
+}
+
+.selection-card:hover .selection-card__image {
+  transform: scale(1.06);
+}
