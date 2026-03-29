@@ -12,10 +12,10 @@
   </parent>
 
   <groupId>com.marsa</groupId>
-  <artifactId>luberight-backend</artifactId>
+  <artifactId>luberight-remote-api</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>luberight-backend</name>
-  <description>Dynamic lubrication API for App Marsa</description>
+  <name>luberight-remote-api</name>
+  <description>Database proxy API for LubeRight</description>
 
   <properties>
     <java.version>17</java.version>
@@ -28,11 +28,11 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
     <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
@@ -42,10 +42,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

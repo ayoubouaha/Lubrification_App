@@ -3,6 +3,7 @@
 *.env
 Backend/.env
 frontend/App_Marsa/.env
+remote_api/.env
 
 # Build outputs
 Backend/target
