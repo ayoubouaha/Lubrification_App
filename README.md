@@ -194,15 +194,22 @@ cd frontend/App_Marsa
 npm run build
 ```
 
-## 8) Depannage rapide
 
-- Pas de donnees backend:
-  - verifier `REMOTE_API_BASE_URL` dans `Backend/.env`
-  - verifier `http://localhost:8082/api/data`
-  - verifier que les tables cache existent dans `DB_CACHE`
-- Erreurs CORS:
-  - verifier `allowedOrigins` dans `WebConfig.java`
-- Frontend ne touche pas le backend:
-  - verifier `proxy.target` dans `vite.config.ts`
-- Changement `Amount`/`Interval` non visible:
-  - verifier que le backend tourne bien avec la version contenant le nouveau `DataSyncService`
+## 8) Workflow Overview
+
+# Data Source (SQL Server)
+   -Stores the main lubrication data.
+
+# remote-api Service
+   -Reads data from SQL Server.
+   -Exposes REST endpoints (e.g., /api/data) for the backend to consume.
+
+# Backend Service (with Local DB)
+   -Periodically (every SYNC_INTERVAL milliseconds) fetches data from remote-api.
+   -Stores this data in its own local cache database (DB_CACHE).
+   -Exposes REST endpoints (e.g., /api/lubrication/latest/{name}) for the frontend.
+   -Serves data to the frontend from its local cache, not directly from remote-api or SQL Server.
+
+# Frontend (React/Vite)
+   -Requests lubrication data from the backend.
+   -Displays up-to-date lubrication information to users.
