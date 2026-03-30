@@ -1,28 +1,45 @@
 # LubeRight Remote API
 
-A lightweight Spring Boot proxy that exposes the database queries currently used by the main
-application. Runs next to SQL Server and serves the same DTO structure through HTTP.
+Minimal Spring Boot service that exposes the existing SQL query used by the legacy app. It reads directly from the production schema (`dbo.Admin` and `dbo.Calender`) and returns DTOs for downstream consumers (the Backend cache and the front-end during dev).
 
-## How to run
+## Requirements
+- Java 17
+- Maven 3.9+
+- SQL Server with the LubeRight schema (tables `Admin`, `Calender`)
+- Network access from the service host to SQL Server
 
-1. Ensure Java 17 and Maven are installed.
-2. Configure database credentials in `.env` (sample provided).
-3. Start the service:
-   ```bash
-   mvn spring-boot:run
-   ```
+## Configuration
+Create `remote-api/.env`:
+```
+DB_URL=jdbc:sqlserver://<host>;databaseName=LubeRightNET;encrypt=true;trustServerCertificate=true
+DB_USERNAME=...
+DB_PASSWORD=...
+```
+`server.port` defaults to `8082` (override via `-Dserver.port=...`).
 
-The service listens on `http://localhost:8082` by default.
+## Run locally
+```bash
+cd remote-api
+mvn spring-boot:run
+# http://localhost:8082
+```
 
 ## Endpoint
-
 - `GET /api/data?updatedAfter=2024-01-01T00:00:00`
-  - No `updatedAfter` parameter returns all active lubrication points.
-  - With `updatedAfter`, returns only rows whose latest calendar timestamp is greater than the
-    provided value.
+  - Omitting `updatedAfter` returns all active lubrication points.
+  - When provided, only rows whose latest calendar timestamp is greater than the supplied ISO date-time are returned.
+  - Response shape:
+    ```json
+    {
+      "name": "Pump-01",
+      "interval": 30,
+      "plannedAmount": 12.5,
+      "actualAmount": 11.8,
+      "timestamp": "2024-03-18T10:42:00"
+    }
+    ```
 
 ## Notes
-
-- Reuses the exact SQL native query from the original repository.
-- Outputs JSON matching `LubricationPointResponse` (name, interval, plannedAmount, actualAmount,
-  timestamp).
+- Uses a native SQL query to pick the latest calendar entry per Admin row, preferring rows with actual amounts.
+- No schema changes are applied by this service; it is read-only against the source database.
+- Actuator endpoints are enabled for `health` and `info`.
