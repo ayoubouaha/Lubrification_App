@@ -54,16 +54,28 @@ public class DataSyncService {
     SyncMetadata metadata = metadataRepository.findById(SYNC_ID).orElseGet(() -> new SyncMetadata(SYNC_ID));
     LocalDateTime lastSync = metadata.getLastSyncTimestamp();
 
-    List<LubricationPointResponse> payload = remoteApiClient.fetchData(lastSync);
-    if (payload == null || payload.isEmpty()) {
+    // Always refresh latest snapshots so Admin-only updates (interval/planned amount)
+    // are not missed when no new Calender timestamp exists.
+    List<LubricationPointResponse> latestPayload = remoteApiClient.fetchData(null);
+    if (latestPayload != null && !latestPayload.isEmpty()) {
+      latestPayload.forEach(this::upsertSnapshot);
+    }
+
+    List<LubricationPointResponse> incrementalPayload;
+    if (lastSync == null) {
+      incrementalPayload = latestPayload;
+    } else {
+      incrementalPayload = remoteApiClient.fetchData(lastSync);
+    }
+
+    if (incrementalPayload == null || incrementalPayload.isEmpty()) {
       return;
     }
 
-    payload.forEach(this::upsertSnapshot);
-    payload.forEach(this::upsertCalender);
+    incrementalPayload.forEach(this::upsertCalender);
 
     Optional<LocalDateTime> maxTimestamp =
-        payload.stream()
+        incrementalPayload.stream()
             .map(LubricationPointResponse::timestamp)
             .filter(ts -> ts != null)
             .max(Comparator.naturalOrder());
