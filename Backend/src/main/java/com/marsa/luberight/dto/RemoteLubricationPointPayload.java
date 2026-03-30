@@ -1,8 +1,8 @@
-package com.marsa.luberight.proxy.domain;
+package com.marsa.luberight.dto;
 
 import java.time.LocalDateTime;
 
-public record LubricationPointResponse(
+public record RemoteLubricationPointPayload(
     String name,
     Integer interval,
     Integer actualInterval,

@@ -1,6 +1,6 @@
 package com.marsa.luberight.service;
 
-import com.marsa.luberight.dto.LubricationPointResponse;
+import com.marsa.luberight.dto.RemoteLubricationPointPayload;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,7 @@ public class RemoteApiClient {
     this.remoteApiWebClient = remoteApiWebClient;
   }
 
-  public List<LubricationPointResponse> fetchData(LocalDateTime updatedAfter) {
+  public List<RemoteLubricationPointPayload> fetchData(LocalDateTime updatedAfter) {
     try {
       return remoteApiWebClient
           .get()
@@ -34,7 +34,7 @@ public class RemoteApiClient {
                 return uriBuilder.build();
               })
           .retrieve()
-          .bodyToFlux(LubricationPointResponse.class)
+          .bodyToFlux(RemoteLubricationPointPayload.class)
           .collectList()
           .block();
     } catch (WebClientResponseException ex) {

@@ -26,9 +26,9 @@ public class LubricationPointService {
     return new LubricationPointResponse(
         view.getName(),
         view.getInterval(),
-      normalizeAmount(view.getPlannedAmount()),
-      normalizeAmount(view.getActualAmount()),
-      view.getTimestamp());
+        normalizeAmount(view.getPlannedAmount()),
+        normalizeAmount(view.getActualAmount()),
+        view.getTimestamp());
   }
 
   private Double normalizeAmount(BigDecimal amount) {

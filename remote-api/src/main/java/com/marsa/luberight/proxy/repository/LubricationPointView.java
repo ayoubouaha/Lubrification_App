@@ -8,6 +8,8 @@ public interface LubricationPointView {
 
   Integer getInterval();
 
+  Integer getActualInterval();
+
   BigDecimal getPlannedAmount();
 
   BigDecimal getActualAmount();

@@ -14,7 +14,8 @@ public interface LubricationPointRepository extends JpaRepository<Admin, Integer
           """
           SELECT
             adm.Name AS name,
-            COALESCE(latestCal.ActualInterval, adm.[Interval]) AS [interval],
+            adm.[Interval] AS [interval],
+            latestCal.ActualInterval AS actualInterval,
             adm.Amount AS plannedAmount,
             latestCal.ActualAmount AS actualAmount,
             latestCal.[TimeStamp] AS [timestamp]

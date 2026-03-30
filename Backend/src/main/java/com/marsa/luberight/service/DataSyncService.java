@@ -2,9 +2,9 @@ package com.marsa.luberight.service;
 
 import com.marsa.luberight.domain.LubricationPointSnapshot;
 import com.marsa.luberight.domain.SyncMetadata;
-import com.marsa.luberight.dto.LubricationPointResponse;
 import com.marsa.luberight.domain.CalenderSnapshot;
 import com.marsa.luberight.domain.CalenderSnapshotId;
+import com.marsa.luberight.dto.RemoteLubricationPointPayload;
 import com.marsa.luberight.repository.CalenderSnapshotRepository;
 import com.marsa.luberight.repository.LubricationPointRepository;
 import com.marsa.luberight.repository.SyncMetadataRepository;
@@ -56,12 +56,12 @@ public class DataSyncService {
 
     // Always refresh latest snapshots so Admin-only updates (interval/planned amount)
     // are not missed when no new Calender timestamp exists.
-    List<LubricationPointResponse> latestPayload = remoteApiClient.fetchData(null);
+    List<RemoteLubricationPointPayload> latestPayload = remoteApiClient.fetchData(null);
     if (latestPayload != null && !latestPayload.isEmpty()) {
       latestPayload.forEach(this::upsertSnapshot);
     }
 
-    List<LubricationPointResponse> incrementalPayload;
+    List<RemoteLubricationPointPayload> incrementalPayload;
     if (lastSync == null) {
       incrementalPayload = latestPayload;
     } else {
@@ -76,7 +76,7 @@ public class DataSyncService {
 
     Optional<LocalDateTime> maxTimestamp =
         incrementalPayload.stream()
-            .map(LubricationPointResponse::timestamp)
+            .map(RemoteLubricationPointPayload::timestamp)
             .filter(ts -> ts != null)
             .max(Comparator.naturalOrder());
 
@@ -87,7 +87,7 @@ public class DataSyncService {
         });
   }
 
-  private void upsertSnapshot(LubricationPointResponse response) {
+  private void upsertSnapshot(RemoteLubricationPointPayload response) {
     if (response.name() == null) {
       log.warn("Skipping entry with null name: {}", response);
       return;
@@ -106,7 +106,7 @@ public class DataSyncService {
     snapshotRepository.save(snapshot);
   }
 
-  private void upsertCalender(LubricationPointResponse response) {
+  private void upsertCalender(RemoteLubricationPointPayload response) {
     if (response.name() == null || response.timestamp() == null) {
       return;
     }
@@ -117,7 +117,7 @@ public class DataSyncService {
             .findById(id)
             .orElseGet(() -> new CalenderSnapshot(id, null, null));
 
-    calender.setActualInterval(response.interval());
+    calender.setActualInterval(response.actualInterval());
     calender.setActualAmount(toBigDecimal(response.actualAmount()));
 
     calenderSnapshotRepository.save(calender);

@@ -27,6 +27,7 @@ public class LubricationPointService {
     return new LubricationPointResponse(
         view.getName(),
         view.getInterval(),
+        view.getActualInterval(),
         toDouble(view.getPlannedAmount()),
         toDouble(view.getActualAmount()),
         view.getTimestamp());
