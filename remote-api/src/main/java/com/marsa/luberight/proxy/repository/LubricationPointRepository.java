@@ -14,28 +14,44 @@ public interface LubricationPointRepository extends JpaRepository<Admin, Integer
           """
           SELECT
             adm.Name AS name,
+            adm.LubricantIndex AS lubricator,
             adm.[Interval] AS [interval],
-            latestCal.ActualInterval AS actualInterval,
-            adm.Amount AS plannedAmount,
-            latestCal.ActualAmount AS actualAmount,
-            latestCal.[TimeStamp] AS [timestamp]
+            cal.ActualInterval AS actualInterval,
+            COALESCE(cal.Amount, adm.Amount) AS plannedAmount,
+            cal.ActualAmount AS actualAmount,
+            cal.[TimeStamp] AS [timestamp]
           FROM dbo.Admin adm
-          OUTER APPLY (
-            SELECT TOP (1)
-              cal.ActualInterval,
-              cal.ActualAmount,
-              cal.[TimeStamp],
-              cal.[Index]
-            FROM dbo.Calender cal
-            WHERE cal.AdminIndex = adm.[Index]
-            ORDER BY
-              CASE WHEN cal.ActualAmount IS NULL THEN 1 ELSE 0 END,
-              cal.[TimeStamp] DESC,
-              cal.[Index] DESC
-          ) AS latestCal
+          LEFT JOIN dbo.Calender cal
+            ON cal.AdminIndex = adm.[Index]
           WHERE adm.Active = 1
-            AND (:updatedAfter IS NULL OR latestCal.[TimeStamp] > :updatedAfter)
+          ORDER BY
+            CASE WHEN cal.[TimeStamp] IS NULL THEN 1 ELSE 0 END,
+            cal.[TimeStamp] ASC,
+            cal.[Index] ASC
           """,
       nativeQuery = true)
-  List<LubricationPointView> findLatest(@Param("updatedAfter") LocalDateTime updatedAfter);
+  List<LubricationPointView> findForInitialLoad();
+
+  @Query(
+      value =
+          """
+          SELECT
+            adm.Name AS name,
+            adm.LubricantIndex AS lubricator,
+            adm.[Interval] AS [interval],
+            cal.ActualInterval AS actualInterval,
+            COALESCE(cal.Amount, adm.Amount) AS plannedAmount,
+            cal.ActualAmount AS actualAmount,
+            cal.[TimeStamp] AS [timestamp]
+          FROM dbo.Admin adm
+          INNER JOIN dbo.Calender cal
+            ON cal.AdminIndex = adm.[Index]
+          WHERE adm.Active = 1
+            AND cal.[TimeStamp] > :updatedAfter
+          ORDER BY
+            cal.[TimeStamp] ASC,
+            cal.[Index] ASC
+          """,
+      nativeQuery = true)
+  List<LubricationPointView> findIncremental(@Param("updatedAfter") LocalDateTime updatedAfter);
 }

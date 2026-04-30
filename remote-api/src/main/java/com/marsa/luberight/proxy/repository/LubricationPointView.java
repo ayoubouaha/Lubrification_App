@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 public interface LubricationPointView {
   String getName();
 
+  Integer getLubricator();
+
   Integer getInterval();
 
   Integer getActualInterval();

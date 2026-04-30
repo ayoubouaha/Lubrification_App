@@ -18,7 +18,11 @@ public class LubricationPointService {
   }
 
   public List<LubricationPointResponse> fetch(LocalDateTime updatedAfter) {
-    return repository.findLatest(updatedAfter).stream()
+    if (updatedAfter == null) {
+      return repository.findForInitialLoad().stream().map(this::mapToResponse).toList();
+    }
+
+    return repository.findIncremental(updatedAfter).stream()
         .map(this::mapToResponse)
         .toList();
   }
@@ -26,6 +30,7 @@ public class LubricationPointService {
   private LubricationPointResponse mapToResponse(LubricationPointView view) {
     return new LubricationPointResponse(
         view.getName(),
+        view.getLubricator(),
         view.getInterval(),
         view.getActualInterval(),
         toDouble(view.getPlannedAmount()),

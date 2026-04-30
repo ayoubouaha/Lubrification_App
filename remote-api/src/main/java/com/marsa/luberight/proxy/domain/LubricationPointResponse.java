@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record LubricationPointResponse(
     String name,
+    Integer lubricator,
     Integer interval,
     Integer actualInterval,
     Double plannedAmount,

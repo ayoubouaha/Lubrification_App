@@ -18,6 +18,9 @@ public class LubricationPointSnapshot {
   @Column(name = "interval_value")
   private Integer interval;
 
+  @Column(name = "lubricator_value")
+  private Integer lubricator;
+
   @Column(name = "planned_amount")
   private BigDecimal plannedAmount;
 
@@ -31,11 +34,13 @@ public class LubricationPointSnapshot {
 
   public LubricationPointSnapshot(
       String name,
+      Integer lubricator,
       Integer interval,
       BigDecimal plannedAmount,
       BigDecimal actualAmount,
       LocalDateTime timestamp) {
     this.name = name;
+    this.lubricator = lubricator;
     this.interval = interval;
     this.plannedAmount = plannedAmount;
     this.actualAmount = actualAmount;
@@ -48,6 +53,10 @@ public class LubricationPointSnapshot {
 
   public Integer getInterval() {
     return interval;
+  }
+
+  public Integer getLubricator() {
+    return lubricator;
   }
 
   public BigDecimal getPlannedAmount() {
@@ -64,6 +73,10 @@ public class LubricationPointSnapshot {
 
   public void setInterval(Integer interval) {
     this.interval = interval;
+  }
+
+  public void setLubricator(Integer lubricator) {
+    this.lubricator = lubricator;
   }
 
   public void setPlannedAmount(BigDecimal plannedAmount) {
