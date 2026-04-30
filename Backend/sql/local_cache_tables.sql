@@ -9,8 +9,8 @@ BEGIN
     planned_amount DECIMAL(19, 2) NULL,
     actual_amount DECIMAL(19, 2) NULL,
     timestamp_value DATETIME2 NULL
-  );
-END
+  )
+END;
 
 IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = 'calender_snapshot' AND schema_id = SCHEMA_ID('dbo'))
 BEGIN
@@ -22,31 +22,31 @@ BEGIN
     planned_amount DECIMAL(19, 2) NULL,
     actual_amount DECIMAL(19, 2) NULL,
     CONSTRAINT PK_calender_snapshot PRIMARY KEY (name, timestamp_value)
-  );
-END
+  )
+END;
 
 IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = 'sync_metadata' AND schema_id = SCHEMA_ID('dbo'))
 BEGIN
   CREATE TABLE dbo.sync_metadata (
     id NVARCHAR(255) NOT NULL PRIMARY KEY,
     last_sync_timestamp DATETIME2 NULL
-  );
-END
+  )
+END;
 
 IF COL_LENGTH('dbo.lubrication_point_snapshot', 'lubricator_value') IS NULL
 BEGIN
   ALTER TABLE dbo.lubrication_point_snapshot
-  ADD lubricator_value INT NULL;
-END
+  ADD lubricator_value INT NULL
+END;
 
 IF COL_LENGTH('dbo.calender_snapshot', 'lubricator_value') IS NULL
 BEGIN
   ALTER TABLE dbo.calender_snapshot
-  ADD lubricator_value INT NULL;
-END
+  ADD lubricator_value INT NULL
+END;
 
 IF COL_LENGTH('dbo.calender_snapshot', 'planned_amount') IS NULL
 BEGIN
   ALTER TABLE dbo.calender_snapshot
-  ADD planned_amount DECIMAL(19, 2) NULL;
-END
+  ADD planned_amount DECIMAL(19, 2) NULL
+END;
