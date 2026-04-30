@@ -16,5 +16,7 @@ public interface LubricationPointView {
 
   BigDecimal getActualAmount();
 
+  Long getSourceRowId();
+
   LocalDateTime getTimestamp();
 }

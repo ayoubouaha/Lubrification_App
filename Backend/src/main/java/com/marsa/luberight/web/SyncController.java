@@ -23,23 +23,26 @@ public class SyncController {
 
   @GetMapping("/last-processed")
   public ResponseEntity<SyncStateResponse> getLastProcessedTimestamp() {
-    LocalDateTime lastProcessedTimestamp = dataSyncService.getLastProcessedTimestamp();
-    return ResponseEntity.ok(new SyncStateResponse(lastProcessedTimestamp));
+    DataSyncService.SyncState state = dataSyncService.getSyncState();
+    return ResponseEntity.ok(
+        new SyncStateResponse(
+            state.lastProcessedTimestamp(),
+            state.lastProcessedSourceRowId(),
+            state.initialSyncCompleted()));
   }
 
   @PostMapping("/batch")
   public ResponseEntity<SyncIngestResponse> ingestBatch(
       @RequestBody List<RemoteLubricationPointPayload> payloads) {
     int insertedRows = dataSyncService.ingestBatch(payloads);
-    return ResponseEntity.ok(
-        new SyncIngestResponse(
-            payloads == null ? 0 : payloads.size(),
-            insertedRows,
-            dataSyncService.getLastProcessedTimestamp()));
+    DataSyncService.SyncState state = dataSyncService.getSyncState();
+    return ResponseEntity.ok(new SyncIngestResponse(payloads == null ? 0 : payloads.size(), insertedRows, state));
   }
 
-  public record SyncStateResponse(LocalDateTime lastProcessedTimestamp) {}
+  public record SyncStateResponse(
+      LocalDateTime lastProcessedTimestamp,
+      Long lastProcessedSourceRowId,
+      boolean initialSyncCompleted) {}
 
-  public record SyncIngestResponse(
-      int receivedRows, int insertedRows, LocalDateTime lastProcessedTimestamp) {}
+  public record SyncIngestResponse(int receivedRows, int insertedRows, DataSyncService.SyncState state) {}
 }

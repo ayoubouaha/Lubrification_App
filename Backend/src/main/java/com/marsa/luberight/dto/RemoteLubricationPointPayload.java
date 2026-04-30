@@ -9,4 +9,5 @@ public record RemoteLubricationPointPayload(
     Integer actualInterval,
     Double plannedAmount,
     Double actualAmount,
+    Long sourceRowId,
     LocalDateTime timestamp) {}

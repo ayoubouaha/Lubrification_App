@@ -1,7 +1,6 @@
 package com.marsa.luberight.proxy.repository;
 
 import com.marsa.luberight.proxy.domain.Admin;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,9 +15,10 @@ public interface LubricationPointRepository extends JpaRepository<Admin, Integer
             adm.Name AS name,
             adm.LubricantIndex AS lubricator,
             adm.[Interval] AS [interval],
-            cal.ActualInterval AS actualInterval,
+            COALESCE(cal.ActualInterval, adm.[Interval]) AS actualInterval,
             COALESCE(cal.Amount, adm.Amount) AS plannedAmount,
             cal.ActualAmount AS actualAmount,
+            cal.[Index] AS sourceRowId,
             cal.[TimeStamp] AS [timestamp]
           FROM dbo.Admin adm
           LEFT JOIN dbo.Calender cal
@@ -39,19 +39,19 @@ public interface LubricationPointRepository extends JpaRepository<Admin, Integer
             adm.Name AS name,
             adm.LubricantIndex AS lubricator,
             adm.[Interval] AS [interval],
-            cal.ActualInterval AS actualInterval,
+            COALESCE(cal.ActualInterval, adm.[Interval]) AS actualInterval,
             COALESCE(cal.Amount, adm.Amount) AS plannedAmount,
             cal.ActualAmount AS actualAmount,
+            cal.[Index] AS sourceRowId,
             cal.[TimeStamp] AS [timestamp]
           FROM dbo.Admin adm
           INNER JOIN dbo.Calender cal
             ON cal.AdminIndex = adm.[Index]
           WHERE adm.Active = 1
-            AND cal.[TimeStamp] > :updatedAfter
+            AND cal.[Index] > :lastSourceRowId
           ORDER BY
-            cal.[TimeStamp] ASC,
             cal.[Index] ASC
           """,
       nativeQuery = true)
-  List<LubricationPointView> findIncremental(@Param("updatedAfter") LocalDateTime updatedAfter);
+  List<LubricationPointView> findIncremental(@Param("lastSourceRowId") Long lastSourceRowId);
 }

@@ -19,18 +19,28 @@ public class BackendSyncClient {
 
   private final RestTemplate restTemplate;
   private final String backendBaseUrl;
+  private final String backendHealthPath;
 
   public BackendSyncClient(
-      RestTemplate restTemplate, @Value("${backend.api.base-url:http://localhost:8081}") String backendBaseUrl) {
+      RestTemplate restTemplate,
+      @Value("${backend.api.base-url:http://localhost:8081}") String backendBaseUrl,
+      @Value("${backend.api.health-path:/actuator/health}") String backendHealthPath) {
     this.restTemplate = restTemplate;
     this.backendBaseUrl = backendBaseUrl;
+    this.backendHealthPath = backendHealthPath;
   }
 
-  public LocalDateTime fetchLastProcessedTimestamp() {
+  public boolean isBackendAvailable() {
+    if (isPathReachable(backendHealthPath)) {
+      return true;
+    }
+    return isPathReachable("/health");
+  }
+
+  public SyncStateResponse fetchSyncState() {
     String url = backendBaseUrl + "/api/lubrication/sync/last-processed";
     ResponseEntity<SyncStateResponse> response = restTemplate.getForEntity(url, SyncStateResponse.class);
-    SyncStateResponse body = response.getBody();
-    return body == null ? null : body.lastProcessedTimestamp();
+    return response.getBody();
   }
 
   public void pushBatch(List<LubricationPointResponse> payloads) {
@@ -42,15 +52,29 @@ public class BackendSyncClient {
     SyncIngestResponse body = response.getBody();
     if (body != null) {
       log.info(
-          "Backend sync accepted batch: receivedRows={}, insertedRows={}, lastProcessedTimestamp={}",
+          "Backend sync accepted batch: receivedRows={}, insertedRows={}, lastProcessedTimestamp={}, lastProcessedSourceRowId={}, initialSyncCompleted={}",
           body.receivedRows(),
           body.insertedRows(),
-          body.lastProcessedTimestamp());
+          body.state() == null ? null : body.state().lastProcessedTimestamp(),
+          body.state() == null ? null : body.state().lastProcessedSourceRowId(),
+          body.state() != null && Boolean.TRUE.equals(body.state().initialSyncCompleted()));
     }
   }
 
-  public record SyncStateResponse(LocalDateTime lastProcessedTimestamp) {}
+  private boolean isPathReachable(String path) {
+    try {
+      String normalizedPath = path.startsWith("/") ? path : "/" + path;
+      String url = backendBaseUrl + normalizedPath;
+      ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+      return response.getStatusCode().is2xxSuccessful();
+    } catch (Exception ex) {
+      log.debug("Backend health check failed at path {}: {}", path, ex.getMessage());
+      return false;
+    }
+  }
 
-  public record SyncIngestResponse(
-      int receivedRows, int insertedRows, LocalDateTime lastProcessedTimestamp) {}
+  public record SyncStateResponse(
+      LocalDateTime lastProcessedTimestamp, Long lastProcessedSourceRowId, Boolean initialSyncCompleted) {}
+
+  public record SyncIngestResponse(int receivedRows, int insertedRows, SyncStateResponse state) {}
 }

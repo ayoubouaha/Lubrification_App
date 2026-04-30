@@ -48,6 +48,15 @@ public class DataSyncService {
     return metadataRepository.findById(SYNC_ID).map(SyncMetadata::getLastSyncTimestamp).orElse(null);
   }
 
+  @Transactional(readOnly = true)
+  public SyncState getSyncState() {
+    SyncMetadata metadata = metadataRepository.findById(SYNC_ID).orElseGet(() -> new SyncMetadata(SYNC_ID));
+    return new SyncState(
+        metadata.getLastSyncTimestamp(),
+        metadata.getLastSyncSourceRowId(),
+        metadata.isInitialSyncCompleted());
+  }
+
   @Transactional
   public int ingestBatch(List<RemoteLubricationPointPayload> payloads) {
     if (payloads == null || payloads.isEmpty()) {
@@ -56,6 +65,7 @@ public class DataSyncService {
 
     SyncMetadata metadata = metadataRepository.findById(SYNC_ID).orElseGet(() -> new SyncMetadata(SYNC_ID));
     LocalDateTime maxTimestamp = metadata.getLastSyncTimestamp();
+    Long maxSourceRowId = metadata.getLastSyncSourceRowId();
 
     int insertedRows = 0;
     for (RemoteLubricationPointPayload payload : payloads) {
@@ -68,13 +78,25 @@ public class DataSyncService {
       if (timestamp != null && (maxTimestamp == null || timestamp.isAfter(maxTimestamp))) {
         maxTimestamp = timestamp;
       }
+
+      Long sourceRowId = payload.sourceRowId();
+      if (sourceRowId != null && (maxSourceRowId == null || sourceRowId > maxSourceRowId)) {
+        maxSourceRowId = sourceRowId;
+      }
     }
 
     if (maxTimestamp != null
         && (metadata.getLastSyncTimestamp() == null || maxTimestamp.isAfter(metadata.getLastSyncTimestamp()))) {
       metadata.setLastSyncTimestamp(maxTimestamp);
-      metadataRepository.save(metadata);
     }
+
+    if (maxSourceRowId != null
+        && (metadata.getLastSyncSourceRowId() == null || maxSourceRowId > metadata.getLastSyncSourceRowId())) {
+      metadata.setLastSyncSourceRowId(maxSourceRowId);
+    }
+
+    metadata.setInitialSyncCompleted(true);
+    metadataRepository.save(metadata);
 
     return insertedRows;
   }
@@ -103,7 +125,7 @@ public class DataSyncService {
     }
 
     snapshot.setLubricator(response.lubricator());
-    snapshot.setInterval(response.interval());
+    snapshot.setInterval(response.actualInterval() != null ? response.actualInterval() : response.interval());
     snapshot.setPlannedAmount(toBigDecimal(response.plannedAmount()));
     snapshot.setActualAmount(toBigDecimal(response.actualAmount()));
     snapshot.setTimestamp(response.timestamp());
@@ -150,4 +172,7 @@ public class DataSyncService {
   private BigDecimal toBigDecimal(Double value) {
     return value == null ? null : BigDecimal.valueOf(value);
   }
+
+  public record SyncState(
+      LocalDateTime lastProcessedTimestamp, Long lastProcessedSourceRowId, boolean initialSyncCompleted) {}
 }

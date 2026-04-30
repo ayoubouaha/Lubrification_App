@@ -17,10 +17,17 @@ public class SyncMetadata {
   @Column(name = "last_sync_timestamp")
   private LocalDateTime lastSyncTimestamp;
 
+  @Column(name = "last_sync_source_row_id")
+  private Long lastSyncSourceRowId;
+
+  @Column(name = "initial_sync_completed", nullable = false)
+  private boolean initialSyncCompleted;
+
   protected SyncMetadata() {}
 
   public SyncMetadata(String id) {
     this.id = id;
+    this.initialSyncCompleted = false;
   }
 
   public String getId() {
@@ -33,5 +40,21 @@ public class SyncMetadata {
 
   public void setLastSyncTimestamp(LocalDateTime lastSyncTimestamp) {
     this.lastSyncTimestamp = lastSyncTimestamp;
+  }
+
+  public Long getLastSyncSourceRowId() {
+    return lastSyncSourceRowId;
+  }
+
+  public void setLastSyncSourceRowId(Long lastSyncSourceRowId) {
+    this.lastSyncSourceRowId = lastSyncSourceRowId;
+  }
+
+  public boolean isInitialSyncCompleted() {
+    return initialSyncCompleted;
+  }
+
+  public void setInitialSyncCompleted(boolean initialSyncCompleted) {
+    this.initialSyncCompleted = initialSyncCompleted;
   }
 }

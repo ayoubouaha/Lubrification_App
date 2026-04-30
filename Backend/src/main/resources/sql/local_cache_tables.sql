@@ -29,7 +29,9 @@ IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = 'sync_metadata' AND schema_
 BEGIN
   CREATE TABLE dbo.sync_metadata (
     id NVARCHAR(255) NOT NULL PRIMARY KEY,
-    last_sync_timestamp DATETIME2 NULL
+    last_sync_timestamp DATETIME2 NULL,
+    last_sync_source_row_id BIGINT NULL,
+    initial_sync_completed BIT NOT NULL CONSTRAINT DF_sync_metadata_initial_sync_completed DEFAULT 0
   )
 END;
 
@@ -49,4 +51,16 @@ IF COL_LENGTH('dbo.calender_snapshot', 'planned_amount') IS NULL
 BEGIN
   ALTER TABLE dbo.calender_snapshot
   ADD planned_amount DECIMAL(19, 2) NULL
+END;
+
+IF COL_LENGTH('dbo.sync_metadata', 'last_sync_source_row_id') IS NULL
+BEGIN
+  ALTER TABLE dbo.sync_metadata
+  ADD last_sync_source_row_id BIGINT NULL
+END;
+
+IF COL_LENGTH('dbo.sync_metadata', 'initial_sync_completed') IS NULL
+BEGIN
+  ALTER TABLE dbo.sync_metadata
+  ADD initial_sync_completed BIT NOT NULL CONSTRAINT DF_sync_metadata_initial_sync_completed DEFAULT 0
 END;
